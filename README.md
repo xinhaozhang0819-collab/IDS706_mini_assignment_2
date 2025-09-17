@@ -1,6 +1,6 @@
 # IDS706_mini_assignment_2
 ## Project Goal
-This project aims to perform basic data analysis and machine learning on dataset gold_data_2015_25.csv to understand patterns in gold prices (GLD) and explore how other market indicators (SPX, USO, SLV, EUR/USD) relate to gold.
+This project aims to perform basic data analysis and machine learning on dataset gold_data_2015_25.csv to understand patterns in gold prices (GLD) and explore how other market indicators (SPX, USO, SLV, EUR/USD) relate to gold. The project also emphasizes reproducibility (via Dockerfile + environment.yml) and testability (via pytest unit tests).
 
 ## Step 1
 First create a new repository in github and clone it based on the following process (replace what's inside <> based on your url and your repository name):
@@ -82,9 +82,46 @@ plt.ylabel("Predicted GLD")
 plt.show()
 ```
 
+## Step 4
+Step 4 — Testing
+
+Unit tests are included in the tests/ folder to validate the correctness of core functions:
+Data loading: ensures dataset loads with expected columns
+Filtering: validates the 75th percentile threshold logic
+Grouping: checks yearly aggregation returns correct shape & statistics
+Model: verifies that the linear regression model fits and predicts without error
+Run tests inside the container with:
+```bash
+pytest -q
+```
+
 ## Findings
 After generating the final graph, here is what we will see:
 1. The plot shows a strong positive correlation between true GLD values and the predictions from the linear regression model. Since most points are close to the diagonal, we can infer that SPX, USO, SLV, and EUR/USD contain useful information for predicting GLD.
 2. However, we have to admit that there are some dispersion at higher GLD values, which imply that the model may not be useful in extreme prices.
+
+## Reproducible Environment (Docker + Dev Container)
+
+This repository includes a reproducible development environment based on Dockerfile and environment.yml.
+Files
+
+- Dockerfile (at repo root): Builds the environment using Miniconda and applies environment.yml.
+
+- environment.yml (at repo root):Declares Python=3.11 and dependencies (pandas, numpy, scikit-learn, matplotlib, seaborn, jupyter, pytest).
+
+- .devcontainer/devcontainer.json: VS Code configuration to build and open the project in a container.
+
+## Usage
+1. Install Docker Desktop and ensure it is running.
+2. Install VS Code + the Dev Containers extension.
+3. Open the repository in VS Code.
+4. Press Ctrl+Shift+P → select Dev Containers: Rebuild Without Cache and Reopen in Container.
+5. Once the container is ready, verify the setup. You may need to install pandas if it shows module pandas doesn't exist:
+```bash
+python -V
+python -c "import pandas; print(pandas.__version__)"
+pytest -q
+```
+This ensures that anyone can reproduce the same environment and analysis regardless of their local setup.
 
 
