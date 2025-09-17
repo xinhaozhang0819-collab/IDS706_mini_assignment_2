@@ -116,12 +116,13 @@ Files
 2. Install VS Code + the Dev Containers extension.
 3. Open the repository in VS Code.
 4. Press Ctrl+Shift+P → select Dev Containers: Rebuild Without Cache and Reopen in Container.
-5. Once the container is ready, verify the setup. You may need to install pandas if it shows module pandas doesn't exist:
+5. Once the container is ready, verify the setup. You may need to install some modules based on the instructions given in the terminal:
 ```bash
 python -V
 python -c "import pandas; print(pandas.__version__)"
 pytest -q
 ```
 This ensures that anyone can reproduce the same environment and analysis regardless of their local setup.
+
 
 
