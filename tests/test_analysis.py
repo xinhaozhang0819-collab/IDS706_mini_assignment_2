@@ -17,14 +17,16 @@ from src.analysis_utils import (
 
 def _tiny_df():
     dates = pd.date_range("2024-01-01", periods=12, freq="D")
-    df = pd.DataFrame({
-        "Date": dates,
-        "SPX": np.linspace(3500, 3560, 12),
-        "GLD": np.linspace(150, 200, 12),
-        "USO": np.linspace(70, 75, 12),
-        "SLV": np.linspace(18, 19, 12),
-        "EUR/USD": np.linspace(1.10, 1.12, 12),
-    }).set_index("Date")
+    df = pd.DataFrame(
+        {
+            "Date": dates,
+            "SPX": np.linspace(3500, 3560, 12),
+            "GLD": np.linspace(150, 200, 12),
+            "USO": np.linspace(70, 75, 12),
+            "SLV": np.linspace(18, 19, 12),
+            "EUR/USD": np.linspace(1.10, 1.12, 12),
+        }
+    ).set_index("Date")
     return df
 
 
@@ -57,6 +59,8 @@ def test_yearly_stats_has_expected_cols():
 
 def test_train_linear_model_returns_metrics():
     df = _tiny_df()
-    _, (_, y_test, y_pred), metrics = train_linear_model(df, test_size=0.25, random_state=0)
+    _, (_, y_test, y_pred), metrics = train_linear_model(
+        df, test_size=0.25, random_state=0
+    )
     assert len(y_test) == len(y_pred)
     assert "r2" in metrics and "mae" in metrics
