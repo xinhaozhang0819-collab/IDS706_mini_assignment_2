@@ -7,7 +7,7 @@ REQUIRED_COLS = ["SPX", "GLD", "USO", "SLV", "EUR/USD"]
 
 
 def load_data(path: str) -> pd.DataFrame:
-    """Read CSV, parse Date, set Date index if存在。"""
+    """Read CSV, parse Date, set Date index."""
     df = pd.read_csv(path)
     if "Date" in df.columns:
         df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
@@ -23,11 +23,12 @@ def validate_columns(df: pd.DataFrame, cols=REQUIRED_COLS):
 
 def filter_high_gld(df: pd.DataFrame, q: float = 0.75) -> pd.DataFrame:
     validate_columns(df)
-    thresh = df["GLD"].quantile(q)
-    return df[df["GLD"] > thresh]
+    gld_threshold = df["GLD"].quantile(q)
+    return df[df["GLD"] > gld_threshold]
 
 
-def yearly_stats(df: pd.DataFrame) -> pd.DataFrame:
+def _resolve_years_and_gld(df: pd.DataFrame):
+    """Extract (years, gld_series) from df regardless of whether Date is index or column."""
     if df.index.name == "Date" and pd.api.types.is_datetime64_any_dtype(df.index):
         years = df.index.year
         gld = df["GLD"]
@@ -38,6 +39,11 @@ def yearly_stats(df: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(
             "No datetime index/column named 'Date' to compute yearly stats."
         )
+    return years, gld
+
+
+def yearly_stats(df: pd.DataFrame) -> pd.DataFrame:
+    years, gld = _resolve_years_and_gld(df)
     return gld.groupby(years).agg(["mean", "std", "min", "max", "count"])
 
 
