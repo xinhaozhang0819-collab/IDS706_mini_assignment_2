@@ -115,6 +115,17 @@ plt.show()
 If you succeed, here is the graph you will see:
 ![Alt text](./Graph1.png)
 
+Digging deeper, we can create a heatmap using the following code:
+```bash
+plt.figure(figsize=(8,6))
+corr = df.corr()
+sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+plt.title("Correlation Heatmap of GLD and Financial Indicators")
+plt.show()
+```
+According to the map below, we will find that SPX and SLV are strongly correlated to GLD.
+![Alt text](./Heatmap.png)
+
 
 ## Step 4
 Step 4 — Testing
@@ -131,21 +142,29 @@ pytest -q
 
 ## Tooling & CI/CD
 This repository integrates **GitHub Actions** for continuous integration:
-- Runs `flake8` for linting
-- Runs `black` for formatting
-- Runs `pytest` for testing
+```bash
+# Lint & format locally
+flake8 src tests
+black . --check
+
+# Run unit tests
+pytest -q
+```
 
 Every push and pull request triggers these checks automatically.
 
 
-## Findings
-After generating the final graph, here is what we will see:
-1. The plot shows a strong positive correlation between true GLD values and the predictions from the linear regression model. Since most points are close to the diagonal, we can infer that SPX, USO, SLV, and EUR/USD contain useful information for predicting GLD.
-2. However, we have to admit that there are some dispersion at higher GLD values, which imply that the model may not be useful in extreme prices.
+## Conclusion
 
-## Limitations & Next Steps
-1. Linear regression may underfit extreme market movements.  
-2. Future work: rolling-window features, time-series models (ARIMA, XGBoost), or more macroeconomic indicators should be tried.
+**Key Findings**  
+- The linear regression model achieves **R² = 0.84** and **MAE = 2.13** on the test set.  
+- Among predictors, **SLV** and **SPX** have the largest positive coefficients (precious metal co-movement), while **EUR/USD** shows a negative relationship (a stronger USD tends to pressure gold prices).  
+- Annual volatility (std) peaked in **2020**, consistent with macroeconomic shocks during that period.  
+- Prediction errors increase slightly at higher GLD values, which indicates that linear regression underfits tail events.  
+
+**Limitations & Potential Revisions**  
+- Linear regression may not capture nonlinear or structural breaks. Thus, models like **XGBoost** or **Lasso regression** should be considered to capture nonlinearities or feature selection in future revisions.
+- Additional macroeconomic factors such as VIX, 10Y Treasury yield, and real interest rates should be included for richer insights.  
 
 
 ## Reproducible Environment (Docker + Dev Container)
