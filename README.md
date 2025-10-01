@@ -1,7 +1,8 @@
 # IDS706_mini_assignment_2
 [![CI](https://github.com/xinhaozhang0819-collab/IDS706_mini_assignment_2/actions/workflows/ci.yml/badge.svg)](https://github.com/xinhaozhang0819-collab/IDS706_mini_assignment_2/actions/workflows/ci.yml)
 ## Project Goal
-This project aims to perform basic data analysis and machine learning on dataset gold_data_2015_25.csv to understand patterns in gold prices (GLD) and explore how other market indicators (SPX, USO, SLV, EUR/USD) relate to gold. The project also emphasizes reproducibility (via Dockerfile + environment.yml) and testability (via pytest unit tests).
+This project aims to analyze gold prices (GLD) from 2015–2025 to understand annual trends, volatility, and relationships with financial indicators such as SPX, USO, SLV, and EUR/USD.  
+The goal is not only to refactor code with CI/CD best practices but also to demonstrate reproducible data analysis and insights.
 
 ## Step 1
 First create a new repository in github and clone it based on the following process (replace what's inside <> based on your url and your repository name):
