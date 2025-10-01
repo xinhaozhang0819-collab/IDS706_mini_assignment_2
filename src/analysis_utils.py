@@ -47,7 +47,6 @@ def yearly_stats(df: pd.DataFrame) -> pd.DataFrame:
     return gld.groupby(years).agg(["mean", "std", "min", "max", "count"])
 
 
-
 def train_linear_model(df: pd.DataFrame, test_size=0.2, random_state=42):
     validate_columns(df)
     X = df[["SPX", "USO", "SLV", "EUR/USD"]]
