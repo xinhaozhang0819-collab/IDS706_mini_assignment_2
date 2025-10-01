@@ -2,7 +2,17 @@
 [![CI](https://github.com/xinhaozhang0819-collab/IDS706_mini_assignment_2/actions/workflows/ci.yml/badge.svg)](https://github.com/xinhaozhang0819-collab/IDS706_mini_assignment_2/actions/workflows/ci.yml)
 ## Project Goal
 This project aims to analyze gold prices (GLD) from 2015–2025 to understand annual trends, volatility, and relationships with financial indicators such as SPX, USO, SLV, and EUR/USD.  
-The goal is not only to refactor code with CI/CD best practices but also to demonstrate reproducible data analysis and insights.
+Our goal also includes refactoring code with CI/CD best practices and demonstrating reproducible data analysis and insights.
+
+## CSV File Description
+- **File:** `gold_data_2015_25.csv`  
+- **Columns:**
+  - `Date` – Date in YYYY-MM-DD format
+  - `GLD` – SPDR Gold Shares (gold price proxy)
+  - `SPX` – S&P 500 Index
+  - `USO` – Oil ETF
+  - `SLV` – Silver ETF
+  - `EUR/USD` – Euro to USD exchange rate
 
 ## Step 1
 First create a new repository in github and clone it based on the following process (replace what's inside <> based on your url and your repository name):
@@ -21,8 +31,19 @@ pip install -r requirements.txt
 ```
 Now you need to create a `.ipynb` file to work on the analysis.
 
+### Repository Structure
+.\
+├── .github/workflows/ci.yml\
+├── src/analysis_utils.py\
+├── tests/test_analysis.py\
+├── Analysis.ipynb\
+├── requirements.txt\
+├── images/\                
+└── gold_data_2015_25.csv
+
+
 ## Step 2
-1. Import & Inspect
+1. Import & Inspect \
 Import modules we needed and import the dataset. Convert `Date` to datetime, and check the structure of the dataset with `.head()`, `.info()`, `.describe()`.
 ```bash
 import pandas as pd
@@ -37,6 +58,14 @@ df = df.set_index("Date").sort_index()
 df.head()
 df.info()
 df.describe()
+```
+We then clean the data using the following code, where missing values were handled with forward/backward filling.:
+```bash
+df.isnull().sum()
+df = df.sort_values("Date")
+df[["GLD","SPX","USO","SLV","EUR/USD"]] = (
+    df[["GLD","SPX","USO","SLV","EUR/USD"]].ffill().bfill()
+)
 ```
 
 2. Filtering & Grouping
@@ -83,6 +112,9 @@ plt.xlabel("True GLD")
 plt.ylabel("Predicted GLD")
 plt.show()
 ```
+If you succeed, here is the graph you will see:
+![Alt text](./Graph1.png)
+
 
 ## Step 4
 Step 4 — Testing
@@ -97,10 +129,24 @@ Run tests inside the container with:
 pytest -q
 ```
 
+## Tooling & CI/CD
+This repository integrates **GitHub Actions** for continuous integration:
+- Runs `flake8` for linting
+- Runs `black` for formatting
+- Runs `pytest` for testing
+
+Every push and pull request triggers these checks automatically.
+
+
 ## Findings
 After generating the final graph, here is what we will see:
 1. The plot shows a strong positive correlation between true GLD values and the predictions from the linear regression model. Since most points are close to the diagonal, we can infer that SPX, USO, SLV, and EUR/USD contain useful information for predicting GLD.
 2. However, we have to admit that there are some dispersion at higher GLD values, which imply that the model may not be useful in extreme prices.
+
+## Limitations & Next Steps
+1. Linear regression may underfit extreme market movements.  
+2. Future work: rolling-window features, time-series models (ARIMA, XGBoost), or more macroeconomic indicators should be tried.
+
 
 ## Reproducible Environment (Docker + Dev Container)
 
